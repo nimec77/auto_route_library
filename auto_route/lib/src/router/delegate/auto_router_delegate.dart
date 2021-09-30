@@ -38,12 +38,11 @@ class AutoRouterDelegate extends RouterDelegate<UrlState> with ChangeNotifier {
   }
 
   static reportUrlChanged(BuildContext context, String url) {
-    Router.of(context)
-        .routeInformationProvider
-        ?.routerReportsNewRouteInformation(
+    Router.of(context).routeInformationProvider?.routerReportsNewRouteInformation(
           RouteInformation(
             location: url,
           ),
+          type: RouteInformationReportingType.navigate,
         );
   }
 
@@ -140,9 +139,8 @@ class AutoRouterDelegate extends RouterDelegate<UrlState> with ChangeNotifier {
     final newState = UrlState.fromSegments(controller.currentSegments);
     if (_urlState.url != newState.url) {
       final segments = newState.segments;
-      final replace = segments.isNotEmpty &&
-          (segments.last.fromRedirect ||
-              (segments.last.hasEmptyPath && _urlState.path == '/'));
+      final replace =
+          segments.isNotEmpty && (segments.last.fromRedirect || (segments.last.hasEmptyPath && _urlState.path == '/'));
       _urlState = newState.copyWith(replace: replace);
     }
     notifyListeners();
@@ -168,8 +166,7 @@ class _DeclarativeAutoRouterDelegate extends AutoRouterDelegate {
     String? navRestorationScopeId,
     this.onPopRoute,
     this.onNavigate,
-    NavigatorObserversBuilder navigatorObservers =
-        AutoRouterDelegate.defaultNavigatorObserversBuilder,
+    NavigatorObserversBuilder navigatorObservers = AutoRouterDelegate.defaultNavigatorObserversBuilder,
   }) : super(
           controller,
           navRestorationScopeId: navRestorationScopeId,
